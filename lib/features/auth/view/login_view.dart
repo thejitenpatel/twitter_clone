@@ -32,13 +32,23 @@ class _LoginViewState extends ConsumerState<LoginView> {
     passwordController.dispose();
   }
 
-  
+    void onLogin() {
+    ref.read(authControllerProvider.notifier).login(
+          email: emailController.text,
+          password: passwordController.text,
+          context: context,
+        );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(authControllerProvider);
+
     return Scaffold(
       appBar: appBar,
-      body: Center(
+      body: isLoading
+          ? const Loader()
+          :  Center(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(
@@ -63,7 +73,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                 Align(
                   alignment: Alignment.topRight,
                   child: RoundedSmallButton(
-                    onTap: (){},
+                    onTap: onLogin,
                     label: "Done",
                   ),
                 ),
